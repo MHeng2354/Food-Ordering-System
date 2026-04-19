@@ -72,7 +72,7 @@
                                 @endif
                             </td>
                             <td>
-                                @if($food->availability)
+                                @if($food->availability == 'available')
                                     <span class="badge bg-success">Available</span>
                                 @else
                                     <span class="badge bg-danger">Unavailable</span>

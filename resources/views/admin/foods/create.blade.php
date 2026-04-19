@@ -36,8 +36,8 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Availability</label>
                                 <select name="availability" class="form-select @error('availability') is-invalid @enderror">
-                                    <option value="1" {{ old('availability') == '1' ? 'selected' : '' }}>Available</option>
-                                    <option value="0" {{ old('availability') == '0' ? 'selected' : '' }}>Unavailable</option>
+                                    <option value="available" {{ old('availability') == "available" ? 'selected' : '' }}>Available</option>
+                                    <option value="unavailable" {{ old('availability') == "unavailable" ? 'selected' : '' }}>Unavailable</option>
                                 </select>
                                 @error('availability')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
