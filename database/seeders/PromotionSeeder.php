@@ -17,6 +17,7 @@ class PromotionSeeder extends Seeder
         Promotion::create([
             'name' => 'Hari Raya Sale',
             'description' => 'Special discount for Hari Raya celebration',
+            'image' => 'promo/hari_raya.jpg',
             'discount_percentage' => 15.0,
             'start_date' => '2026-04-01',
             'end_date' => '2026-05-31',

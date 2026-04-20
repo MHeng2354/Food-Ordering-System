@@ -80,6 +80,7 @@ class CreateAllTables extends Migration
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
+            $table->string('image')->nullable();
             $table->decimal('discount_percentage', 5, 2);
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();

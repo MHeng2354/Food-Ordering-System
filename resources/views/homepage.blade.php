@@ -27,45 +27,6 @@
     <div class="container py-4">
 
         <section class="mb-5">
-            <h2 class="section-title mb-4 text-center">Why choose City Food Express?</h2>
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="card feature-card h-100 border-0 shadow-sm text-center">
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <i class="bi bi-truck text-primary" style="font-size: 3rem;"></i>
-                            </div>
-                            <h5 class="card-title">Fast delivery</h5>
-                            <p class="card-text text-muted">Get your order delivered hot and fresh in record time, with real-time updates for every step.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card feature-card h-100 border-0 shadow-sm text-center">
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <i class="bi bi-list-ul text-success" style="font-size: 3rem;"></i>
-                            </div>
-                            <h5 class="card-title">Variety of options</h5>
-                            <p class="card-text text-muted">Enjoy authentic Malaysian dishes, from spicy curries to fresh seafood. We have it all.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card feature-card h-100 border-0 shadow-sm text-center">
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <i class="bi bi-cart-check text-warning" style="font-size: 3rem;"></i>
-                            </div>
-                            <h5 class="card-title">Easy ordering</h5>
-                            <p class="card-text text-muted">A seamless menu experience, secure checkout, and order tracking make dining simple.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="mb-5">
             <h2 class="section-title mb-4 text-center">Popular Malaysian Picks</h2>
             <div class="row g-4">
                 @foreach($foods->take(3) as $food)
@@ -85,6 +46,31 @@
                         </a>
                     </div>
                 </div>
+                @endforeach
+            </div>
+        </section>
+
+        <section class="mb-5">
+            <h2 class="section-title mb-4 text-center">Current Promotions</h2>
+            <div class="row g-4">
+                @foreach($promotions as $promotion)
+                    <div class="col-lg-4">
+                        <a href="/promotions" style="text-decoration: none;">
+                            <div class="card dish-card h-100 overflow-hidden border-0 shadow-sm position-relative" style="transition: transform 0.3s; cursor: pointer;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                                @if($promotion->image)
+                                    <img src="{{ asset('images/' . $promotion->image) }}" class="card-img-top" alt="{{ $promotion->name }}" style="height: 200px; object-fit: cover;">
+                                @else
+                                    <img src="https://via.placeholder.com/400x300?text=No+Image" class="card-img-top" alt="{{ $promotion->name }}" style="height: 200px; object-fit: cover;">
+                                @endif
+                                <div class="position-absolute top-0 end-0 m-3">
+                                    <span class="badge bg-success fs-6">{{ number_format($promotion->discount_percentage, 0) }}% OFF</span>
+                                </div>
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">{{ $promotion->name }}</h5>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
                 @endforeach
             </div>
         </section>

@@ -31,10 +31,17 @@ class PromotionController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'discount_percentage' => 'required|numeric|min:0|max:100',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
         ]);
+
+        if ($request->hasFile('image')) {
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('images/promo'), $imageName);
+            $data['image'] = 'promo/' . $imageName;
+        }
 
         Promotion::create($data);
 
@@ -57,10 +64,22 @@ class PromotionController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'discount_percentage' => 'required|numeric|min:0|max:100',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
         ]);
+
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($promotion->image && file_exists(public_path('images/' . $promotion->image))) {
+                unlink(public_path('images/' . $promotion->image));
+            }
+
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('images/promo'), $imageName);
+            $data['image'] = 'promo/' . $imageName;
+        }
 
         $promotion->update($data);
 
@@ -72,6 +91,11 @@ class PromotionController extends Controller
     public function destroy(Promotion $promotion)
     {
         $this->authorize('delete', $promotion);
+
+        // Delete image if exists
+        if ($promotion->image && file_exists(public_path('images/' . $promotion->image))) {
+            unlink(public_path('images/' . $promotion->image));
+        }
 
         $promotion->delete();
 

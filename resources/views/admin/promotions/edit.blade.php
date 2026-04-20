@@ -12,7 +12,7 @@
         <div class="col-md-8">
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
-                    <form action="{{ route('admin.promotions.update', $promotion->id) }}" method="POST">
+                    <form action="{{ route('admin.promotions.update', $promotion->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
 
@@ -26,6 +26,18 @@
                             <label class="form-label">Description</label>
                             <textarea name="description" class="form-control @error('description') is-invalid @enderror" rows="4">{{ old('description', $promotion->description) }}</textarea>
                             @error('description')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Promotion Image</label>
+                            @if($promotion->image)
+                                <div class="mb-2">
+                                    <img src="{{ asset('images/' . $promotion->image) }}" alt="Current Image" class="img-thumbnail" style="max-width: 200px;">
+                                </div>
+                            @endif
+                            <input type="file" name="image" class="form-control @error('image') is-invalid @enderror" accept="image/*">
+                            <small class="form-text text-muted">Leave empty to keep current image. Supported formats: JPG, PNG, GIF</small>
+                            @error('image')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
 
                         <div class="row">

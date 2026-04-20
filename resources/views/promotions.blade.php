@@ -21,13 +21,20 @@
             <div class="row g-4">
                 @foreach($promotions as $promotion)
                     <div class="col-lg-6">
-                        <div class="card border-0 shadow-sm h-100 overflow-hidden">
+                        <div class="card border-0 shadow-sm h-100 overflow-hidden position-relative">
+                            @if($promotion->image)
+                                <img src="{{ asset('images/' . $promotion->image) }}" class="card-img-top" alt="{{ $promotion->name }}" style="height: 200px; object-fit: cover;">
+                            @else
+                                <img src="https://via.placeholder.com/400x300?text=No+Image" class="card-img-top" alt="{{ $promotion->name }}" style="height: 200px; object-fit: cover;">
+                            @endif
+                            <div class="position-absolute top-0 end-0 m-3">
+                                <span class="badge bg-success fs-6">{{ number_format($promotion->discount_percentage, 0) }}% OFF</span>
+                            </div>
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-start mb-4">
                                     <div>
                                         <h4 class="fw-bold">{{ $promotion->name }}</h4>
                                         <p class="text-muted mb-2">{{ $promotion->description }}</p>
-                                        <span class="badge bg-success">{{ number_format($promotion->discount_percentage, 0) }}% OFF</span>
                                     </div>
                                     <div class="text-end">
                                         @if($promotion->start_date || $promotion->end_date)

@@ -24,6 +24,8 @@ class FoodController extends Controller
     public function promotions()
     {
         $promotions = \App\Models\Promotion::where('discount_percentage', '>', 0)
+            ->where('start_date', '<=', now())
+            ->where('end_date', '>=', now())
             ->has('foods')
             ->with('foods')
             ->get();
@@ -34,6 +36,13 @@ class FoodController extends Controller
     public function showLatestFoods()
     {
         $foods = Food::latest()->take(5)->get();
-        return view('homepage', compact('foods'));
+        $promotions = \App\Models\Promotion::where('discount_percentage', '>', 0)
+            ->where('start_date', '<=', now())
+            ->where('end_date', '>=', now())
+            ->has('foods')
+            ->with('foods')
+            ->take(3)
+            ->get();
+        return view('homepage', compact('foods', 'promotions'));
     }
 }

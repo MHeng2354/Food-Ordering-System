@@ -23,6 +23,7 @@
             <table class="table table-hover mb-0">
                 <thead class="table-light">
                     <tr>
+                        <th>Image</th>
                         <th>Name</th>
                         <th>Discount</th>
                         <th>Period</th>
@@ -33,6 +34,13 @@
                 <tbody>
                     @forelse($promotions as $promotion)
                         <tr>
+                            <td>
+                                @if($promotion->image)
+                                    <img src="{{ asset('images/' . $promotion->image) }}" alt="Promotion Image" class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;">
+                                @else
+                                    <span class="text-muted">No image</span>
+                                @endif
+                            </td>
                             <td>{{ $promotion->name }}</td>
                             <td>{{ number_format($promotion->discount_percentage, 0) }}%</td>
                             <td>
