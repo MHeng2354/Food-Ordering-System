@@ -56,10 +56,10 @@
                                 <strong>{{ $food->name }}</strong>
                             </td>
                             <td>
-                                <small class="text-muted">{{ Str::limit($food->description, 50) }}</small>
+                                <small class="text-muted">{{ Str::limit($food->description, 30) }}</small>
                             </td>
                             <td>
-                                <strong>${{ number_format($food->price, 2) }}</strong>
+                                <strong>RM {{ number_format($food->price, 2) }}</strong>
                             </td>
                             <td>
                                 {{ $food->category->name ?? 'N/A' }}
