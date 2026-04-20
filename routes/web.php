@@ -27,6 +27,8 @@ Route::get('/menu', [FoodController::class, 'index'])->name('menu')->middleware(
 
 Route::get('/foods', [FoodController::class, 'index'])->name('foods.index')->middleware('auth');
 
+Route::get('/foods/{id}', [FoodController::class, 'show'])->name('foods.show')->middleware('auth');
+
 Route::get('/promotions', [FoodController::class, 'promotions'])->name('promotions')->middleware('auth');
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index')->middleware('auth');

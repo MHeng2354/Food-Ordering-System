@@ -15,7 +15,7 @@
                         <a href="/menu" class="btn btn-primary btn-lg">
                             <i class="bi bi-cart-check text-white"></i> Order Food
                         </a>
-                        <a href="/contact" class="btn btn-outline-primary btn-lg">
+                        <a href="/about" class="btn btn-outline-primary btn-lg">
                             <i class="bi bi-info-circle text-info"></i> Learn More
                         </a>
                     </div>

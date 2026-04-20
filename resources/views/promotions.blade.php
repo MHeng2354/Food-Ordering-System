@@ -42,31 +42,29 @@
                                 <div class="row g-3 mb-3">
                                     @foreach($promotion->foods as $food)
                                         <div class="col-12 col-md-6">
-                                            <div class="card h-100 border-0 shadow-sm overflow-hidden">
-                                                @if($food->image)
-                                                    <img src="{{ asset('images/' . $food->image) }}" class="card-img-top" alt="{{ $food->name }}" style="height: 180px; object-fit: cover;">
-                                                @else
-                                                    <div class="bg-secondary" style="height: 180px;"></div>
-                                                @endif
-                                                <div class="card-body d-flex flex-column">
-                                                    <div>
-                                                        <h5 class="card-title mb-2">{{ $food->name }}</h5>
-                                                        <p class="text-muted small mb-3">{{ Str::limit($food->description, 70) }}</p>
-                                                    </div>
-                                                    <div class="mt-auto">
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <span class="fw-bold">RM {{ number_format($food->price, 2) }}</span>
-                                                            <span class="badge bg-primary">{{ $food->category->name ?? 'No category' }}</span>
+                                            <a href="{{ route('foods.show', $food->id) }}" class="text-decoration-none">
+                                                <div class="card border-0 shadow-sm overflow-hidden" style="height: 350px; transition: transform 0.3s; cursor: pointer;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                                                    @if($food->image)
+                                                        <img src="{{ asset('images/' . $food->image) }}" class="card-img-top" alt="{{ $food->name }}" style="height: 180px; object-fit: cover;">
+                                                    @else
+                                                        <div class="bg-secondary" style="height: 180px;"></div>
+                                                    @endif
+                                                    <div class="card-body d-flex flex-column">
+                                                        <div>
+                                                            <h5 class="card-title mb-2">{{ $food->name }}</h5>
+                                                            <p class="text-muted small mb-3">{{ Str::limit($food->description, 70) }}</p>
+                                                        </div>
+                                                        <div class="mt-auto">
+                                                            <div class="d-flex justify-content-between align-items-center">
+                                                                <span class="fw-bold">RM {{ number_format($food->price, 2) }}</span>
+                                                                <span class="badge bg-primary">{{ $food->category->name ?? 'No category' }}</span>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </a>
                                         </div>
                                     @endforeach
-                                </div>
-
-                                <div class="text-end">
-                                    <a href="/menu" class="btn btn-primary">Browse Full Menu</a>
                                 </div>
                             </div>
                         </div>
