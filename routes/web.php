@@ -31,7 +31,15 @@ Route::get('/foods/{id}', [FoodController::class, 'show'])->name('foods.show')->
 
 Route::get('/promotions', [FoodController::class, 'promotions'])->name('promotions')->middleware('auth');
 
-Route::get('/cart', [CartController::class, 'index'])->name('cart.index')->middleware('auth');
+Route::middleware('auth')->group(function () {
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
+    Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+    Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
+    
+    // Toggle food availability (Admin only)
+    Route::post('/foods/{id}/toggle-availability', [FoodController::class, 'toggleAvailability'])->name('foods.toggleAvailability');
+});
 
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 
