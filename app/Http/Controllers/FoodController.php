@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Food;
 use App\Models\Category;
+use App\Models\Food;
 use Illuminate\Http\Request;
 
 class FoodController extends Controller
@@ -12,18 +12,15 @@ class FoodController extends Controller
 
     public function index(Request $request)
     {
-        $query = Food::with('category', 'reviews', 'promotion');
-        
-        // Filter by category if provided
-        if ($request->filled('category_id')) {
-            $query->where('category_id', $request->category_id);
-        }
-        
-        $foods = $query->get();
+        $foods = Food::with('category', 'reviews', 'promotion')->get();
         $categories = Category::all();
-        $selectedCategory = $request->get('category_id');
-        
-        return view('foods.index', compact('foods', 'categories', 'selectedCategory'));
+
+        // Group foods by category
+        $foodsByCategory = $foods->groupBy(function ($food) {
+            return $food->category ? $food->category->name : 'Uncategorized';
+        });
+
+        return view('foods.index', compact('foodsByCategory', 'categories'));
     }
 
     public function show($id)
@@ -47,16 +44,16 @@ class FoodController extends Controller
     public function toggleAvailability(Request $request, $id)
     {
         $food = Food::findOrFail($id);
-        
+
         // Check if user is admin
         if (auth()->user()->role !== 'admin') {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
-        
+
         // Toggle availability
         $food->availability = $food->availability === 'available' ? 'unavailable' : 'available';
         $food->save();
-        
+
         return response()->json(['success' => true, 'availability' => $food->availability]);
     }
 
