@@ -12,7 +12,7 @@ class FoodController extends Controller
 
     public function index(Request $request)
     {
-        $foods = Food::with('category', 'reviews', 'promotion')->get();
+        $foods = Food::with('category', 'promotion')->get();
         $categories = Category::all();
 
         // Group foods by category
@@ -25,7 +25,7 @@ class FoodController extends Controller
 
     public function show($id)
     {
-        $food = Food::with('category', 'reviews.user')->findOrFail($id);
+        $food = Food::with('category', 'promotion')->findOrFail($id);
         return view('foods.show', compact('food'));
     }
 

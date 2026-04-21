@@ -87,7 +87,7 @@
                         <span class="badge mt-2
                             @if($order->status == 'pending') bg-warning text-dark
                             @elseif($order->status == 'preparing') bg-info
-                            @elseif($order->status == 'delivered') bg-success
+                            @elseif($order->status == 'completed') bg-success
                             @elseif($order->status == 'cancelled') bg-danger
                             @endif">
                             {{ ucfirst($order->status) }}
@@ -117,7 +117,7 @@
                             <select name="status" id="status" class="form-select" required>
                                 <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Pending</option>
                                 <option value="preparing" {{ $order->status == 'preparing' ? 'selected' : '' }}>Preparing</option>
-                                <option value="delivered" {{ $order->status == 'delivered' ? 'selected' : '' }}>Delivered</option>
+                                <option value="completed" {{ $order->status == 'completed' ? 'selected' : '' }}>Completed</option>
                                 <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
                             </select>
                         </div>

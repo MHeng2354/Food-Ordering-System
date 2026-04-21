@@ -58,18 +58,6 @@ class CreateAllTables extends Migration
             $table->timestamps();
         });
 
-        Schema::create('reviews', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('food_id');
-            $table->integer('rating');
-            $table->text('comment')->nullable();
-            $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('food_id')->references('id')->on('foods')->onDelete('cascade');
-        });
-
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -97,7 +85,6 @@ class CreateAllTables extends Migration
     {
         Schema::dropIfExists('promotions');
         Schema::dropIfExists('categories');
-        Schema::dropIfExists('reviews');
         Schema::dropIfExists('order_items');
         Schema::dropIfExists('orders');
         Schema::dropIfExists('foods');

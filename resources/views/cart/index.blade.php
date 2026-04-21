@@ -41,7 +41,7 @@
 				<div class="col">
 					<div class="card border-dark-subtle shadow-sm overflow-hidden">
 						<div class="card-header bg-white border-0 py-3">
-							<h5 class="border-bottom border-dark">Items in Cart ({{ $totalQuantity }})</h5>
+							<h5 class="border-bottom border-dark" style="padding-bottom: 0.5rem;">Items in Cart ({{ $totalQuantity }})</h5>
 						</div>
 						<div class="card-body p-0">
 							<div class="table-responsive">

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Food;
 use App\Models\Order;
 use App\Models\OrderItem;
-use App\Models\Food;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -71,7 +71,7 @@ class PaymentController extends Controller
                     'food_id' => $primaryFoodId,
                     'quantity' => $totalQuantity,
                     'total_price' => $totalPrice,
-                    'status' => 'completed',
+                    'status' => 'pending',
                 ]);
 
                 foreach ($orderLines as $line) {

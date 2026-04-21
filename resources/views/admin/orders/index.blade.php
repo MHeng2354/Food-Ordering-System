@@ -22,7 +22,7 @@
                     <option value="">All Statuses</option>
                     <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
                     <option value="preparing" {{ request('status') == 'preparing' ? 'selected' : '' }}>Preparing</option>
-                    <option value="delivered" {{ request('status') == 'delivered' ? 'selected' : '' }}>Delivered</option>
+                    <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Completed</option>
                     <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
                 </select>
             </div>
@@ -73,7 +73,7 @@
                             <span class="badge
                                 @if($order->status == 'pending') bg-warning text-dark
                                 @elseif($order->status == 'preparing') bg-info
-                                @elseif($order->status == 'delivered') bg-success
+                                @elseif($order->status == 'completed') bg-success
                                 @elseif($order->status == 'cancelled') bg-danger
                                 @endif">
                                 {{ ucfirst($order->status) }}

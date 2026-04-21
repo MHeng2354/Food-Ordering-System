@@ -9,6 +9,9 @@
     <style>
         body { display: flex; flex-direction: column; min-height: 100vh; }
         main { flex: 1; overflow-y: auto; scroll-behavior: smooth; }
+        .navbar { z-index: 1030 !important; }
+        .navbar-collapse { z-index: 1031 !important; }
+        .dropdown-menu { z-index: 1032 !important; }
         .hero {
             overflow: hidden;
             color: #fff;
@@ -33,7 +36,7 @@
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark overflow-hidden sticky-top">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
         <div class="container">
             <a class="navbar-brand" href="/homepage">🍕 Ching Chong Express</a>
             

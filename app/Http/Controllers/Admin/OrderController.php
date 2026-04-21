@@ -52,7 +52,7 @@ class OrderController extends Controller
         $this->authorize('update', $order);
 
         $data = $request->validate([
-            'status' => 'required|in:pending,preparing,delivered,cancelled',
+            'status' => 'required|in:pending,preparing,completed,cancelled',
         ]);
 
         $order->update($data);

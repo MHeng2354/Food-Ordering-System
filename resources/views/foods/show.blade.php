@@ -107,47 +107,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Reviews Section -->
-        <div class="row g-4 mt-4">
-            <div class="col-lg-8">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold mb-4">Customer Reviews</h5>
-
-                        @if($food->reviews && $food->reviews->count() > 0)
-                            <div class="reviews-list">
-                                @foreach($food->reviews as $review)
-                                    <div class="review-item border-bottom pb-3 mb-3">
-                                        <div class="d-flex justify-content-between align-items-start">
-                                            <div>
-                                                <h6 class="fw-bold mb-1">{{ $review->user->name ?? 'Anonymous' }}</h6>
-                                                <div class="text-warning mb-2">
-                                                    @for($i = 1; $i <= 5; $i++)
-                                                        @if($i <= $review->rating)
-                                                            <i class="bi bi-star-fill"></i>
-                                                        @else
-                                                            <i class="bi bi-star"></i>
-                                                        @endif
-                                                    @endfor
-                                                    <span class="text-muted ms-2">{{ $review->rating }}/5</span>
-                                                </div>
-                                            </div>
-                                            <small class="text-muted">{{ $review->created_at->diffForHumans() }}</small>
-                                        </div>
-                                        <p class="text-muted mb-0">{{ $review->comment }}</p>
-                                    </div>
-                                @endforeach
-                            </div>
-                        @else
-                            <p class="text-muted text-center py-4">
-                                <i class="bi bi-chat-left-text me-2"></i>No reviews yet. Be the first to review!
-                            </p>
-                        @endif
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <script>

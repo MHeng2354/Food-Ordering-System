@@ -88,7 +88,7 @@
                             <span class="badge
                                 @if($order->status == 'pending') bg-warning text-dark
                                 @elseif($order->status == 'preparing') bg-info
-                                @elseif($order->status == 'delivered') bg-success
+                                @elseif($order->status == 'completed') bg-success
                                 @elseif($order->status == 'completed') bg-success
                                 @elseif($order->status == 'cancelled') bg-danger
                                 @endif">
