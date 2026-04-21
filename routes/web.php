@@ -33,9 +33,9 @@ Route::get('/promotions', [FoodController::class, 'promotions'])->name('promotio
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index')->middleware('auth');
 
-Route::get('/contact', function () {
-    return view('contact');
-})->name('contact');
+Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
+
+Route::post('/contact', [HomeController::class, 'submitContact'])->name('contact.submit');
 
 Route::get('/', function () {
     return redirect('/login');
