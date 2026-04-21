@@ -21,115 +21,108 @@
     <div class="container py-4">
         <!-- Category Filter -->
         <div class="mb-4">
-            <h5 class="mb-3">Filter by Category</h5>
+            <h5 class="mb-3">Browse by Category</h5>
             <div class="d-flex flex-wrap gap-2 mb-4">
-                <a href="{{ route('foods.index') }}" class="btn {{ !$selectedCategory ? 'btn-primary' : 'btn-outline-primary' }} btn-sm">
-                    <i class="bi bi-list me-1"></i>All Categories
-                </a>
                 @foreach($categories as $category)
-                    <a href="{{ route('foods.index', ['category_id' => $category->id]) }}" class="btn {{ $selectedCategory == $category->id ? 'btn-primary' : 'btn-outline-primary' }} btn-sm">
+                    <a href="#category-{{ $category->id }}" class="btn btn-outline-primary btn-sm">
                         {{ $category->name }}
                     </a>
                 @endforeach
             </div>
         </div>
 
-        @if($foods->count())
-            <div class="row g-4">
-                @foreach($foods as $food)
-                    <div class="col-lg-4 col-md-6">
-                        <div class="card dish-card h-100 overflow-hidden border-0 shadow-sm" style="transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 0.5rem 1.5rem rgba(0,0,0,0.2)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 0.125rem 0.25rem rgba(0,0,0,0.075)'">
-                            <div style="position: relative; height: 200px; overflow: hidden;">
-                                @if($food->image)
-                                    <img src="{{ asset('images/' . $food->image) }}" class="card-img-top" alt="{{ $food->name }}" style="height: 100%; object-fit: cover; width: 100%;">
-                                @else
-                                    <div class="bg-light d-flex align-items-center justify-content-center" style="height: 100%;">
-                                        <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
-                                    </div>
-                                @endif
-                                
-                                <!-- Availability Badge -->
-                                @if($food->availability == 'available')
-                                    <span class="badge bg-success position-absolute top-0 start-0 m-2">Available</span>
-                                @else
-                                    <span class="badge bg-danger position-absolute top-0 start-0 m-2">Unavailable</span>
-                                @endif
-
-                                <!-- Admin Toggle Availability Button -->
-                                @if(auth()->check() && auth()->user()->role === 'admin')
-                                    <button type="button" class="btn btn-sm position-absolute top-0 start-50 translate-middle-x m-2" style="background-color: rgba(255, 255, 255, 0.9);" onclick="toggleAvailability({{ $food->id }}, this)" title="Toggle Availability">
-                                        <i class="bi bi-arrow-repeat text-dark"></i>
-                                    </button>
-                                @endif
-
-                                <!-- Promotion Badge -->
-                                @if($food->promotion && $food->promotion->discount_percentage > 0)
-                                    <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-2">{{ $food->promotion->discount_percentage }}% OFF</span>
-                                @endif
-                            </div>
-                            
-                            <div class="card-body d-flex flex-column">
-                                <div>
-                                    <div class="d-flex justify-content-between align-items-start mb-2">
-                                        <h5 class="card-title mb-0">{{ $food->name }}</h5>
-                                        @if($food->category)
-                                            <span class="badge bg-primary ms-2">{{ $food->category->name }}</span>
-                                        @endif
-                                    </div>
-                                    <p class="card-text text-muted small mb-3">{{ Str::limit($food->description, 80) }}</p>
-                                </div>
-                                
-                                <div class="mt-auto">
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <div>
-                                            @if($food->promotion && $food->promotion->discount_percentage > 0)
-                                                <p class="text-primary fw-bold h5 mb-0">RM {{ number_format($food->price * (1 - $food->promotion->discount_percentage / 100), 2) }}</p>
-                                                <small class="text-muted text-decoration-line-through">RM {{ number_format($food->price, 2) }}</small>
+        @if($foodsByCategory->count())
+            <!-- Category Sections -->
+            @foreach($categories as $category)
+                @if(isset($foodsByCategory[$category->name]) && $foodsByCategory[$category->name]->count() > 0)
+                    <div id="category-{{ $category->id }}" class="mb-5">
+                        <h3 class="mb-4 text-primary">{{ $category->name }}</h3>
+                        <div class="row g-4">
+                            @foreach($foodsByCategory[$category->name] as $food)
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="card dish-card h-100 overflow-hidden border-0 shadow-sm" style="transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 0.5rem 1.5rem rgba(0,0,0,0.2)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 0.125rem 0.25rem rgba(0,0,0,0.075)'">
+                                        <div style="position: relative; height: 200px; overflow: hidden;">
+                                            @if($food->image)
+                                                <img src="{{ asset('images/' . $food->image) }}" class="card-img-top" alt="{{ $food->name }}" style="height: 100%; object-fit: cover; width: 100%;">
                                             @else
-                                                <p class="text-primary fw-bold h5 mb-0">RM {{ number_format($food->price, 2) }}</p>
+                                                <div class="bg-light d-flex align-items-center justify-content-center" style="height: 100%;">
+                                                    <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
+                                                </div>
+                                            @endif
+                                            
+                                            <!-- Availability Badge -->
+                                            @if($food->availability == 'available')
+                                                <span class="badge bg-success position-absolute top-0 start-0 m-2">Available</span>
+                                            @else
+                                                <span class="badge bg-danger position-absolute top-0 start-0 m-2">Unavailable</span>
+                                            @endif
+
+                                            <!-- Admin Toggle Availability Button -->
+                                            @if(auth()->check() && auth()->user()->role === 'admin')
+                                                <button type="button" class="btn btn-sm position-absolute top-0 start-50 translate-middle-x m-2" style="background-color: rgba(255, 255, 255, 0.9);" onclick="toggleAvailability({{ $food->id }}, this)" title="Toggle Availability">
+                                                    <i class="bi bi-arrow-repeat text-dark"></i>
+                                                </button>
+                                            @endif
+
+                                            <!-- Promotion Badge -->
+                                            @if($food->promotion && $food->promotion->discount_percentage > 0)
+                                                <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-2">{{ $food->promotion->discount_percentage }}% OFF</span>
                                             @endif
                                         </div>
-                                    </div>
-                                    
-                                    <div class="btn-group w-100" role="group">
-                                        <button
-                                            type="button"
-                                            class="btn btn-outline-primary btn-sm"
-                                            onclick="openFoodDetailsModal(this)"
-                                            data-id="{{ $food->id }}"
-                                            data-name="{{ e($food->name) }}"
-                                            data-description="{{ e($food->description) }}"
-                                            data-image="{{ $food->image ? asset('images/' . $food->image) : '' }}"
-                                            data-price="{{ number_format($food->price, 2, '.', '') }}"
-                                            data-category="{{ $food->category ? e($food->category->name) : '' }}"
-                                            data-available="{{ $food->availability == 'available' ? '1' : '0' }}"
-                                            data-discount="{{ $food->promotion && $food->promotion->discount_percentage > 0 ? number_format($food->promotion->discount_percentage, 2, '.', '') : '0' }}"
-                                        >
-                                            <i class="bi bi-eye me-1"></i>View Details
-                                        </button>
-                                        @if($food->availability == 'available')
-                                            <button
-                                                type="button"
-                                                class="btn btn-primary btn-sm"
-                                                style="flex: 1;"
-                                                onclick="openAddToCartModal(this)"
-                                                data-id="{{ $food->id }}"
-                                                data-name="{{ e($food->name) }}"
-                                            >
-                                                <i class="bi bi-cart-plus me-1"></i>Add
-                                            </button>
-                                        @else
-                                            <button type="button" class="btn btn-secondary btn-sm" disabled>
-                                                <i class="bi bi-x-circle me-1"></i>Unavailable
-                                            </button>
-                                        @endif
+                                        
+                                        <div class="card-body d-flex flex-column">
+                                            <div>
+                                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                                    <h5 class="card-title mb-0">{{ $food->name }}</h5>
+                                                    @if($food->category)
+                                                        <span class="badge bg-primary ms-2">{{ $food->category->name }}</span>
+                                                    @endif
+                                                </div>
+                                                <p class="card-text text-muted small mb-3">{{ Str::limit($food->description, 80) }}</p>
+                                            </div>
+                                            
+                                            <div class="mt-auto">
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <div>
+                                                        @if($food->promotion && $food->promotion->discount_percentage > 0)
+                                                            <p class="text-primary fw-bold h5 mb-0">RM {{ number_format($food->price * (1 - $food->promotion->discount_percentage / 100), 2) }}</p>
+                                                            <small class="text-muted text-decoration-line-through">RM {{ number_format($food->price, 2) }}</small>
+                                                        @else
+                                                            <p class="text-primary fw-bold h5 mb-0">RM {{ number_format($food->price, 2) }}</p>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="btn-group w-100" role="group">
+                                                    <a href="{{ route('foods.show', $food->id) }}" class="btn btn-outline-primary btn-sm">
+                                                        <i class="bi bi-eye me-1"></i>View Details
+                                                    </a>
+                                                    @if($food->availability == 'available')
+                                                        <button
+                                                            type="button"
+                                                            class="btn btn-primary btn-sm"
+                                                            style="flex: 1;"
+                                                            onclick="openAddToCartModal(this)"
+                                                            data-id="{{ $food->id }}"
+                                                            data-name="{{ e($food->name) }}"
+                                                        >
+                                                            <i class="bi bi-cart-plus me-1"></i>Add
+                                                        </button>
+                                                    @else
+                                                        <button type="button" class="btn btn-secondary btn-sm" disabled>
+                                                            <i class="bi bi-x-circle me-1"></i>Unavailable
+                                                        </button>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            @endforeach
                         </div>
                     </div>
-                @endforeach
-            </div>
+                @endif
+            @endforeach
         @else
             <div class="alert alert-info text-center py-5">
                 <i class="bi bi-info-circle me-2"></i>
@@ -137,46 +130,6 @@
                 <p class="text-muted mb-0">Please check back later for our menu items.</p>
             </div>
         @endif
-    </div>
-
-    <div class="modal fade" id="foodDetailsModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content border-0 shadow-lg">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title fw-bold" id="foodDetailsName"></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body pt-0">
-                    <div class="row g-4">
-                        <div class="col-md-6">
-                            <div class="rounded-3 overflow-hidden bg-light" style="height: 260px;">
-                                <img id="foodDetailsImage" src="" alt="Food image" style="width: 100%; height: 100%; object-fit: cover; display: none;">
-                                <div id="foodDetailsPlaceholder" class="h-100 d-flex align-items-center justify-content-center text-muted">
-                                    <i class="bi bi-image" style="font-size: 3rem;"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <span class="badge bg-primary" id="foodDetailsCategory" style="display: none;"></span>
-                            </div>
-                            <div class="mb-3" id="foodDetailsPriceWrap"></div>
-                            <div class="mb-3">
-                                <span class="badge" id="foodDetailsAvailability"></span>
-                            </div>
-                            <h6 class="fw-bold">Description</h6>
-                            <p class="text-muted mb-0" id="foodDetailsDescription"></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer border-0">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="foodDetailsAddButton" style="display: none;">
-                        <i class="bi bi-cart-plus me-1"></i>Add to Cart
-                    </button>
-                </div>
-            </div>
-        </div>
     </div>
 
     <div class="modal fade" id="addToCartModal" tabindex="-1" aria-hidden="true">
@@ -219,17 +172,22 @@
     <script>
         let selectedFoodId = null;
         let selectedFoodName = '';
-        let foodDetailsModal = null;
         let addToCartModal = null;
         let menuActionToast = null;
 
-        function getFoodDetailsModal() {
-            if (!foodDetailsModal) {
-                foodDetailsModal = new bootstrap.Modal(document.getElementById('foodDetailsModal'));
-            }
-
-            return foodDetailsModal;
-        }
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
 
         function getAddToCartModal() {
             if (!addToCartModal) {
@@ -266,64 +224,6 @@
             getMenuActionToast().show();
         }
 
-        function openFoodDetailsModal(button) {
-            const discount = parseFloat(button.dataset.discount || '0');
-            const originalPrice = parseFloat(button.dataset.price || '0');
-            const isAvailable = button.dataset.available === '1';
-            const image = button.dataset.image || '';
-            const category = button.dataset.category || '';
-            const description = button.dataset.description || 'No description available.';
-
-            document.getElementById('foodDetailsName').textContent = button.dataset.name || 'Food';
-            document.getElementById('foodDetailsDescription').textContent = description;
-
-            const categoryBadge = document.getElementById('foodDetailsCategory');
-            if (category) {
-                categoryBadge.textContent = category;
-                categoryBadge.style.display = 'inline-block';
-            } else {
-                categoryBadge.style.display = 'none';
-            }
-
-            const imageElement = document.getElementById('foodDetailsImage');
-            const placeholder = document.getElementById('foodDetailsPlaceholder');
-            if (image) {
-                imageElement.src = image;
-                imageElement.style.display = 'block';
-                placeholder.style.display = 'none';
-            } else {
-                imageElement.style.display = 'none';
-                placeholder.style.display = 'flex';
-            }
-
-            const availability = document.getElementById('foodDetailsAvailability');
-            availability.className = `badge ${isAvailable ? 'bg-success' : 'bg-danger'}`;
-            availability.textContent = isAvailable ? 'Available' : 'Unavailable';
-
-            const finalPrice = discount > 0 ? originalPrice * (1 - discount / 100) : originalPrice;
-            const priceWrap = document.getElementById('foodDetailsPriceWrap');
-            if (discount > 0) {
-                priceWrap.innerHTML = `
-                    <div class="text-primary fw-bold h4 mb-0">RM ${finalPrice.toFixed(2)}</div>
-                    <small class="text-muted text-decoration-line-through">RM ${originalPrice.toFixed(2)}</small>
-                    <span class="badge bg-warning text-dark ms-2">${discount.toFixed(0)}% OFF</span>
-                `;
-            } else {
-                priceWrap.innerHTML = `<div class="text-primary fw-bold h4 mb-0">RM ${originalPrice.toFixed(2)}</div>`;
-            }
-
-            const addBtn = document.getElementById('foodDetailsAddButton');
-            if (isAvailable) {
-                addBtn.style.display = 'inline-block';
-                addBtn.dataset.id = button.dataset.id;
-                addBtn.dataset.name = button.dataset.name;
-            } else {
-                addBtn.style.display = 'none';
-            }
-
-            getFoodDetailsModal().show();
-        }
-
         function openAddToCartModal(button) {
             selectedFoodId = button.dataset.id;
             selectedFoodName = button.dataset.name || 'this item';
@@ -344,11 +244,6 @@
             const next = Math.min(99, Math.max(1, current + change));
             input.value = next;
         }
-
-        document.getElementById('foodDetailsAddButton').addEventListener('click', function () {
-            getFoodDetailsModal().hide();
-            openAddToCartModal(this);
-        });
 
         document.getElementById('confirmAddToCartBtn').addEventListener('click', async function () {
             const qtyInput = document.getElementById('addToCartQuantity');
