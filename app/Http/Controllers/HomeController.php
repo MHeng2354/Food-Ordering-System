@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Food;
+use App\Models\Promotion;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -25,6 +26,14 @@ class HomeController extends Controller
     public function index()
     {
         $foods = Food::latest()->take(5)->get();
-        return view('homepage', compact('foods'));
+        $promotions = Promotion::where('discount_percentage', '>', 0)
+            ->where('start_date', '<=', now())
+            ->where('end_date', '>=', now())
+            ->has('foods')
+            ->with('foods')
+            ->take(3)
+            ->get();
+
+        return view('homepage', compact('foods', 'promotions'));
     }
 }
