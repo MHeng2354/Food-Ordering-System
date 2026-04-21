@@ -12,7 +12,7 @@ class FoodController extends Controller
 
     public function index(Request $request)
     {
-        $query = Food::with('category', 'reviews');
+        $query = Food::with('category', 'reviews', 'promotion');
         
         // Filter by category if provided
         if ($request->filled('category_id')) {

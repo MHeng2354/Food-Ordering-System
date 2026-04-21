@@ -92,17 +92,32 @@
                                     </div>
                                     
                                     <div class="btn-group w-100" role="group">
-                                        <a href="{{ route('foods.show', $food->id) }}" class="btn btn-outline-primary btn-sm">
+                                        <button
+                                            type="button"
+                                            class="btn btn-outline-primary btn-sm"
+                                            onclick="openFoodDetailsModal(this)"
+                                            data-id="{{ $food->id }}"
+                                            data-name="{{ e($food->name) }}"
+                                            data-description="{{ e($food->description) }}"
+                                            data-image="{{ $food->image ? asset('images/' . $food->image) : '' }}"
+                                            data-price="{{ number_format($food->price, 2, '.', '') }}"
+                                            data-category="{{ $food->category ? e($food->category->name) : '' }}"
+                                            data-available="{{ $food->availability == 'available' ? '1' : '0' }}"
+                                            data-discount="{{ $food->promotion && $food->promotion->discount_percentage > 0 ? number_format($food->promotion->discount_percentage, 2, '.', '') : '0' }}"
+                                        >
                                             <i class="bi bi-eye me-1"></i>View Details
-                                        </a>
+                                        </button>
                                         @if($food->availability == 'available')
-                                            <form method="POST" action="{{ route('cart.add', $food->id) }}" style="flex: 1;">
-                                                @csrf
-                                                <input type="hidden" name="quantity" value="1">
-                                                <button type="submit" class="btn btn-primary btn-sm w-100">
-                                                    <i class="bi bi-cart-plus me-1"></i>Add
-                                                </button>
-                                            </form>
+                                            <button
+                                                type="button"
+                                                class="btn btn-primary btn-sm"
+                                                style="flex: 1;"
+                                                onclick="openAddToCartModal(this)"
+                                                data-id="{{ $food->id }}"
+                                                data-name="{{ e($food->name) }}"
+                                            >
+                                                <i class="bi bi-cart-plus me-1"></i>Add
+                                            </button>
                                         @else
                                             <button type="button" class="btn btn-secondary btn-sm" disabled>
                                                 <i class="bi bi-x-circle me-1"></i>Unavailable
@@ -124,7 +139,256 @@
         @endif
     </div>
 
+    <div class="modal fade" id="foodDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold" id="foodDetailsName"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body pt-0">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="rounded-3 overflow-hidden bg-light" style="height: 260px;">
+                                <img id="foodDetailsImage" src="" alt="Food image" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                                <div id="foodDetailsPlaceholder" class="h-100 d-flex align-items-center justify-content-center text-muted">
+                                    <i class="bi bi-image" style="font-size: 3rem;"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <span class="badge bg-primary" id="foodDetailsCategory" style="display: none;"></span>
+                            </div>
+                            <div class="mb-3" id="foodDetailsPriceWrap"></div>
+                            <div class="mb-3">
+                                <span class="badge" id="foodDetailsAvailability"></span>
+                            </div>
+                            <h6 class="fw-bold">Description</h6>
+                            <p class="text-muted mb-0" id="foodDetailsDescription"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="foodDetailsAddButton" style="display: none;">
+                        <i class="bi bi-cart-plus me-1"></i>Add to Cart
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addToCartModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Add to Cart</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-3">How many <span class="fw-semibold" id="addToCartFoodName"></span> would you like to add?</p>
+                    <label for="addToCartQuantity" class="form-label">Quantity</label>
+                    <div class="input-group">
+                        <button class="btn btn-outline-secondary" type="button" onclick="adjustAddQty(-1)">-</button>
+                        <input type="number" id="addToCartQuantity" class="form-control text-center" value="1" min="1" max="99">
+                        <button class="btn btn-outline-secondary" type="button" onclick="adjustAddQty(1)">+</button>
+                    </div>
+                    <div class="form-text">Minimum 1 item, maximum 99 items per add action.</div>
+                    <div class="alert mt-3 mb-0 d-none" id="addToCartFeedback"></div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="confirmAddToCartBtn">
+                        <i class="bi bi-cart-check me-1"></i>Add Items
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1080;">
+        <div id="menuActionToast" class="toast align-items-center border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="menuActionToastBody"></div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        let selectedFoodId = null;
+        let selectedFoodName = '';
+        let foodDetailsModal = null;
+        let addToCartModal = null;
+        let menuActionToast = null;
+
+        function getFoodDetailsModal() {
+            if (!foodDetailsModal) {
+                foodDetailsModal = new bootstrap.Modal(document.getElementById('foodDetailsModal'));
+            }
+
+            return foodDetailsModal;
+        }
+
+        function getAddToCartModal() {
+            if (!addToCartModal) {
+                addToCartModal = new bootstrap.Modal(document.getElementById('addToCartModal'));
+            }
+
+            return addToCartModal;
+        }
+
+        function getMenuActionToast() {
+            if (!menuActionToast) {
+                const menuActionToastElement = document.getElementById('menuActionToast');
+                menuActionToast = new bootstrap.Toast(menuActionToastElement, { delay: 2200 });
+            }
+
+            return menuActionToast;
+        }
+
+        function updateCartCount(cartCount) {
+            const cartLink = document.querySelector('a.nav-link[href="/cart"]');
+            if (cartLink && Number.isInteger(cartCount)) {
+                cartLink.textContent = `Cart (${cartCount})`;
+            }
+        }
+
+        function showMenuToast(message, isSuccess = true) {
+            const toastBody = document.getElementById('menuActionToastBody');
+            toastBody.textContent = message;
+
+            const menuActionToastElement = document.getElementById('menuActionToast');
+            menuActionToastElement.classList.remove('text-bg-success', 'text-bg-danger');
+            menuActionToastElement.classList.add(isSuccess ? 'text-bg-success' : 'text-bg-danger');
+
+            getMenuActionToast().show();
+        }
+
+        function openFoodDetailsModal(button) {
+            const discount = parseFloat(button.dataset.discount || '0');
+            const originalPrice = parseFloat(button.dataset.price || '0');
+            const isAvailable = button.dataset.available === '1';
+            const image = button.dataset.image || '';
+            const category = button.dataset.category || '';
+            const description = button.dataset.description || 'No description available.';
+
+            document.getElementById('foodDetailsName').textContent = button.dataset.name || 'Food';
+            document.getElementById('foodDetailsDescription').textContent = description;
+
+            const categoryBadge = document.getElementById('foodDetailsCategory');
+            if (category) {
+                categoryBadge.textContent = category;
+                categoryBadge.style.display = 'inline-block';
+            } else {
+                categoryBadge.style.display = 'none';
+            }
+
+            const imageElement = document.getElementById('foodDetailsImage');
+            const placeholder = document.getElementById('foodDetailsPlaceholder');
+            if (image) {
+                imageElement.src = image;
+                imageElement.style.display = 'block';
+                placeholder.style.display = 'none';
+            } else {
+                imageElement.style.display = 'none';
+                placeholder.style.display = 'flex';
+            }
+
+            const availability = document.getElementById('foodDetailsAvailability');
+            availability.className = `badge ${isAvailable ? 'bg-success' : 'bg-danger'}`;
+            availability.textContent = isAvailable ? 'Available' : 'Unavailable';
+
+            const finalPrice = discount > 0 ? originalPrice * (1 - discount / 100) : originalPrice;
+            const priceWrap = document.getElementById('foodDetailsPriceWrap');
+            if (discount > 0) {
+                priceWrap.innerHTML = `
+                    <div class="text-primary fw-bold h4 mb-0">RM ${finalPrice.toFixed(2)}</div>
+                    <small class="text-muted text-decoration-line-through">RM ${originalPrice.toFixed(2)}</small>
+                    <span class="badge bg-warning text-dark ms-2">${discount.toFixed(0)}% OFF</span>
+                `;
+            } else {
+                priceWrap.innerHTML = `<div class="text-primary fw-bold h4 mb-0">RM ${originalPrice.toFixed(2)}</div>`;
+            }
+
+            const addBtn = document.getElementById('foodDetailsAddButton');
+            if (isAvailable) {
+                addBtn.style.display = 'inline-block';
+                addBtn.dataset.id = button.dataset.id;
+                addBtn.dataset.name = button.dataset.name;
+            } else {
+                addBtn.style.display = 'none';
+            }
+
+            getFoodDetailsModal().show();
+        }
+
+        function openAddToCartModal(button) {
+            selectedFoodId = button.dataset.id;
+            selectedFoodName = button.dataset.name || 'this item';
+
+            document.getElementById('addToCartFoodName').textContent = selectedFoodName;
+            document.getElementById('addToCartQuantity').value = 1;
+
+            const feedback = document.getElementById('addToCartFeedback');
+            feedback.className = 'alert mt-3 mb-0 d-none';
+            feedback.textContent = '';
+
+            getAddToCartModal().show();
+        }
+
+        function adjustAddQty(change) {
+            const input = document.getElementById('addToCartQuantity');
+            const current = parseInt(input.value || '1', 10);
+            const next = Math.min(99, Math.max(1, current + change));
+            input.value = next;
+        }
+
+        document.getElementById('foodDetailsAddButton').addEventListener('click', function () {
+            getFoodDetailsModal().hide();
+            openAddToCartModal(this);
+        });
+
+        document.getElementById('confirmAddToCartBtn').addEventListener('click', async function () {
+            const qtyInput = document.getElementById('addToCartQuantity');
+            const quantity = Math.min(99, Math.max(1, parseInt(qtyInput.value || '1', 10)));
+            qtyInput.value = quantity;
+
+            const feedback = document.getElementById('addToCartFeedback');
+            const token = document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}';
+
+            this.disabled = true;
+
+            try {
+                const response = await fetch(`{{ url('/cart/add') }}/${selectedFoodId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': token,
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({ quantity })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    throw new Error(data.message || 'Unable to add item to cart.');
+                }
+
+                updateCartCount(data.cartCount);
+                getAddToCartModal().hide();
+                showMenuToast(data.message || 'Food added to cart successfully!', true);
+            } catch (error) {
+                feedback.className = 'alert alert-danger mt-3 mb-0';
+                feedback.textContent = error.message || 'An unexpected error occurred.';
+            } finally {
+                this.disabled = false;
+            }
+        });
+
         function toggleAvailability(foodId, button) {
             const token = document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}';
             
