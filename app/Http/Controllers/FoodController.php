@@ -3,16 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Models\Food;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class FoodController extends Controller
 {
     //
 
-    public function index()
+    public function index(Request $request)
     {
-        $foods = Food::with('category', 'reviews')->get();
-        return view('foods.index', compact('foods'));
+        $query = Food::with('category', 'reviews');
+        
+        // Filter by category if provided
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+        
+        $foods = $query->get();
+        $categories = Category::all();
+        $selectedCategory = $request->get('category_id');
+        
+        return view('foods.index', compact('foods', 'categories', 'selectedCategory'));
     }
 
     public function show($id)
@@ -31,6 +42,22 @@ class FoodController extends Controller
             ->get();
 
         return view('promotions', compact('promotions'));
+    }
+
+    public function toggleAvailability(Request $request, $id)
+    {
+        $food = Food::findOrFail($id);
+        
+        // Check if user is admin
+        if (auth()->user()->role !== 'admin') {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+        
+        // Toggle availability
+        $food->availability = $food->availability === 'available' ? 'unavailable' : 'available';
+        $food->save();
+        
+        return response()->json(['success' => true, 'availability' => $food->availability]);
     }
 
     public function showLatestFoods()

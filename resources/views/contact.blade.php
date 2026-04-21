@@ -8,9 +8,18 @@
                 <h1 style="font-size: 4.0rem;">Contact Us</h1>
                 <p class="lead" style="font-size: 1.25rem;">If you have questions or need assistance, please fill out the form below and we will get back to you.</p>
             </div>
+
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <form method="POST" action="#">
+                    <form method="POST" action="{{ route('contact.submit') }}">
+                        @csrf
                         @csrf
 
                         <div class="mb-3">
