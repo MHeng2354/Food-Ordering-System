@@ -25,10 +25,10 @@ class CartController extends Controller
         $quantityToAdd = max(1, (int) $request->input('quantity', 1));
         $cart = session()->get('cart', []);
         if (isset($cart[$id])) {
-            $cart[$id]['quantity'] += $quantityToAdd;
+            $cart[$id]['quantity'] = min(99, $cart[$id]['quantity'] + $quantityToAdd);
         } else {
             $cart[$id] = [
-                'quantity' => $quantityToAdd,
+                'quantity' => min(99, $quantityToAdd),
             ];
         }
 
@@ -90,7 +90,7 @@ class CartController extends Controller
         $cart = session()->get('cart', []);
 
         if (isset($cart[$id])) {
-            $cart[$id]['quantity'] = max(1, (int) $request->input('quantity', 1));
+            $cart[$id]['quantity'] = min(99, max(1, (int) $request->input('quantity', 1)));
             session()->put('cart', $cart);
         }
 

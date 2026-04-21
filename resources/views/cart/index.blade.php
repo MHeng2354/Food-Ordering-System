@@ -87,7 +87,7 @@
 													<form method="POST" action="{{ route('cart.update', $food->id) }}">
 														@csrf
 														<div class="input-group input-group-sm">
-															<input type="number" name="quantity" value="{{ $item['quantity'] }}" min="1" class="form-control">
+															<input type="number" name="quantity" value="{{ $item['quantity'] }}" min="1" max="99" class="form-control">
 															<button class="btn btn-outline-primary" type="submit" title="Update quantity">
 																<i class="bi bi-arrow-repeat"></i>
 															</button>
