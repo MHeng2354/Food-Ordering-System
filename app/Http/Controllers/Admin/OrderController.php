@@ -12,7 +12,7 @@ class OrderController extends Controller
     {
         $this->authorize('viewAny', Order::class);
 
-        $query = Order::with('user', 'food');
+        $query = Order::with('user', 'orderItems.food');
 
         if ($request->filled('status')) {
             $query->where('status', $request->status);
@@ -27,7 +27,7 @@ class OrderController extends Controller
                             ->where('name', 'like', "%{$term}%")
                             ->orWhere('email', 'like', "%{$term}%");
                     })
-                    ->orWhereHas('food', function ($q) use ($term) {
+                    ->orWhereHas('orderItems.food', function ($q) use ($term) {
                         $q->where('name', 'like', "%{$term}%");
                     });
             });
@@ -42,7 +42,7 @@ class OrderController extends Controller
     {
         $this->authorize('view', $order);
 
-        $order->load('user', 'food');
+        $order->load('user', 'orderItems.food.category');
 
         return view('admin.orders.show', compact('order'));
     }

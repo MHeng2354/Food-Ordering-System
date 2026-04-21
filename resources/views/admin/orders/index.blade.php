@@ -39,8 +39,8 @@
                     <tr>
                         <th>ID</th>
                         <th>User</th>
-                        <th>Food</th>
-                        <th>Quantity</th>
+                        <th>Items</th>
+                        <th>Total Qty</th>
                         <th>Total Price</th>
                         <th>Status</th>
                         <th>Order Time</th>
@@ -52,15 +52,29 @@
                     <tr>
                         <td>{{ $order->id }}</td>
                         <td>{{ $order->user->name }}<br><small class="text-muted">{{ $order->user->email }}</small></td>
-                        <td>{{ $order->food->name }}</td>
-                        <td>{{ $order->quantity }}</td>
-                        <td>RM {{ number_format($order->total_price, 2) }}</td>
+                        <td>
+                            @if($order->orderItems->count() == 1)
+                                {{ $order->orderItems->first()->food->name }}
+                            @else
+                                <div class="small">
+                                    {{ $order->orderItems->count() }} items:
+                                    @foreach($order->orderItems->take(2) as $item)
+                                        <div>{{ $item->food->name }} ({{ $item->quantity }}×)</div>
+                                    @endforeach
+                                    @if($order->orderItems->count() > 2)
+                                        <div>+{{ $order->orderItems->count() - 2 }} more</div>
+                                    @endif
+                                </div>
+                            @endif
+                        </td>
+                        <td>{{ $order->orderItems->sum('quantity') }}</td>
+                        <td>RM {{ number_format($order->orderItems->sum(function($item) { return $item->price * $item->quantity; }), 2) }}</td>
                         <td>
                             <span class="badge
-                                @if($order->status == 'pending') badge-warning
-                                @elseif($order->status == 'preparing') badge-info
-                                @elseif($order->status == 'delivered') badge-success
-                                @elseif($order->status == 'cancelled') badge-danger
+                                @if($order->status == 'pending') bg-warning text-dark
+                                @elseif($order->status == 'preparing') bg-info
+                                @elseif($order->status == 'delivered') bg-success
+                                @elseif($order->status == 'cancelled') bg-danger
                                 @endif">
                                 {{ ucfirst($order->status) }}
                             </span>
