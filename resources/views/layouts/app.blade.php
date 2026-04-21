@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <style>
         body { display: flex; flex-direction: column; min-height: 100vh; }
-        main { flex: 1; }
+        main { flex: 1; overflow-y: auto; scroll-behavior: smooth; }
         .hero {
             overflow: hidden;
             color: #fff;
@@ -33,7 +33,7 @@
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark overflow-hidden sticky-top">
         <div class="container">
             <a class="navbar-brand" href="/homepage">🍕 Ching Chong Express</a>
             
