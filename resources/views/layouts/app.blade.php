@@ -48,7 +48,7 @@
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item"><a class="nav-link" href="/homepage">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="/menu">Menu</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/promotions">promotions</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/promotions">Promotions</a></li>
                 </ul>
 
                 <ul class="navbar-nav ms-auto">
