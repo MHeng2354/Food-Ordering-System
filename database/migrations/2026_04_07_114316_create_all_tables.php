@@ -44,9 +44,7 @@ class CreateAllTables extends Migration
             $table->decimal('total_price', 8, 2);
             $table->string('status')->default('pending');
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('food_id')->references('id')->on('foods')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');$table->foreign('food_id')->references('id')->on('foods')->onDelete('cascade');
         });
 
         Schema::create('order_items', function (Blueprint $table) {
