@@ -5,9 +5,9 @@
         <div class="container">
             <div class="row align-items-center gx-5">
                 <div class="col-lg-6">
-                    <h1 class="display-4 fw-bold mb-4">About Ching Chong Express</h1>
-                    <p class="lead mb-4">Bringing authentic Malaysian flavors to your doorstep with passion, quality, and convenience.</p>
-                    <p class="text-muted">Founded with a love for Malaysian cuisine, we connect food lovers with the best local restaurants and deliver unforgettable dining experiences.</p>
+                    <h1 class="display-4 fw-bold mb-4">About FoodHub</h1>
+                    <p class="mb-4">Bringing authentic Malaysian flavors to your doorstep with passion, quality, and convenience.</p>
+                    <p class="mb-4">Founded with a love for Malaysian cuisine, we connect food lovers with the best local restaurants and deliver unforgettable dining experiences.</p>
                 </div>
                 <div class="col-lg-6 text-center">
                     <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80" class="img-fluid rounded-4 shadow-sm" alt="Malaysian food spread">
@@ -22,7 +22,7 @@
             <div class="row g-5">
                 <div class="col-lg-6">
                     <h2 class="h1 mb-4">Our Story</h2>
-                    <p class="mb-4">City Food Express was born from a simple idea: to make authentic Malaysian food accessible to everyone, everywhere. Our founders, passionate food enthusiasts, noticed how difficult it was to find genuine Malaysian dishes outside of Malaysia.</p>
+                    <p class="mb-4">FoodHub was born from a simple idea: to make authentic Malaysian food accessible to everyone, everywhere. Our founders, passionate food enthusiasts, noticed how difficult it was to find genuine Malaysian dishes outside of Malaysia.</p>
                     <p class="mb-4">Starting as a small delivery service in the heart of the city, we've grown into a trusted platform that connects customers with the finest Malaysian restaurants. We believe that great food brings people together, and we're committed to delivering not just meals, but memorable experiences.</p>
                     <p>Today, we serve thousands of happy customers daily, from nasi lemak lovers to rendang enthusiasts, all while maintaining our core values of quality, authenticity, and exceptional service.</p>
                 </div>
@@ -61,7 +61,7 @@
         </section>
 
         <section class="mb-5">
-            <h2 class="h1 text-center mb-5">Why Choose City Food Express?</h2>
+            <h2 class="h1 text-center mb-5">Why Choose FoodHub?</h2>
             <div class="row g-4">
                 <div class="col-md-4">
                     <div class="card h-100 border-0 shadow-sm text-center">

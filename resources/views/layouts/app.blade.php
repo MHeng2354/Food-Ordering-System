@@ -38,7 +38,7 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
         <div class="container">
-            <a class="navbar-brand" href="/homepage">🍕 Ching Chong Express</a>
+            <a class="navbar-brand" href="/homepage">🍕 FoodHub</a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -114,7 +114,7 @@
                 </div>
             </div>
             <hr class="bg-white">
-            <p class="small mb-0">&copy; 2026 Ching Chong Express. Built for UECS2354 Laravel Assignment. No cats or dogs were harmed in the process :) </p>
+            <p class="small mb-0">&copy; 2026 FoodHub. Built for UECS2354 Laravel Assignment.</p>
         </div>
     </footer>
 
