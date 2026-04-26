@@ -13,6 +13,7 @@ class CreateAllTables extends Migration
      */
     public function up()
     {
+        // stores customer and admin account details.
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -24,6 +25,7 @@ class CreateAllTables extends Migration
             $table->timestamps();
         });
 
+        // stores menu item information like name, price, description, image, and availability.
         Schema::create('foods', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -36,6 +38,7 @@ class CreateAllTables extends Migration
             $table->timestamps();
         });
 
+        // stores customer purchase records.
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
@@ -44,9 +47,11 @@ class CreateAllTables extends Migration
             $table->decimal('total_price', 8, 2);
             $table->string('status')->default('pending');
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');$table->foreign('food_id')->references('id')->on('foods')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('food_id')->references('id')->on('foods')->onDelete('cascade');
         });
 
+        // stores the individual food items inside each order.
         Schema::create('order_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('order_id')->constrained()->onDelete('cascade');
@@ -56,12 +61,14 @@ class CreateAllTables extends Migration
             $table->timestamps();
         });
 
+        // stores food categories such as drinks, desserts,rice etc.
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->timestamps();
         });
 
+        // stores discount or promotional offers.
         Schema::create('promotions', function (Blueprint $table) {
             $table->id();
             $table->string('name');
